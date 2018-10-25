@@ -6,7 +6,7 @@
 		"node_modules",
 	],
 	"compilerOptions": {
-		"module": "es6",
+		"module": "commonjs",
 		"target": "es5",
 		"allowJs": true,
 		"outDir": "./build/",
@@ -19,7 +19,9 @@
 			"jasmine"
 		],
 		"typeRoots": [
-			"src/__typings/**/*"
-		]
+			"node_modules/@types/**/*",
+			"src/__typings__/**/*"
+		],
+		"allowSyntheticDefaultImports": true
 	}
 }

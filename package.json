@@ -16,15 +16,18 @@
   "homepage": "https://github.com/Terry-Su/ts-react#readme",
   "scripts": {
     "start": "webpack -w",
-    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "test": "ts-node --files true node_modules/jasmine/bin/jasmine",
     "server": "browser-sync start --server --port 6060 --watch fixtures --directory --startPath /fixtures/Counter/index.html --no-open"
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.9",
+    "@types/lodash": "^4.14.117",
     "@types/node": "^10.12.0",
     "browser-sync": "^2.26.3",
     "clean-webpack-plugin": "^0.1.19",
+    "eslint": "^5.7.0",
     "jasmine": "^3.2.0",
+    "lodash": "^4.17.11",
     "ts-loader": "^5.2.2",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.3",
