@@ -1,5 +1,8 @@
 export const DOM_OPERATION_QUEUE_TYPES = {
-  ADD: 'ADD',
+  ADD    : 'ADD',
   REPLACE: 'REPLACE',
-  REMOVE: 'REMOVE',
+  REMOVE : 'REMOVE',
 }
+
+
+export const DOM_TEXT_TYPE = '$text'

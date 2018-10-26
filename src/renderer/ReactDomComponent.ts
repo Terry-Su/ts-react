@@ -2,8 +2,8 @@ import { ReactDOMElement } from "../__typings__/Core"
 import { CHILDREN } from "../constant/name"
 import { instantiateComponent } from "../util/core/index"
 import { ModifiedNode } from "../__typings__/index"
-import { notNil, isArray, isNil } from "../util/lodash"
-import { DOM_OPERATION_QUEUE_TYPES } from "../constant/type"
+import { notNil, isArray, isNil, isString } from "../util/lodash"
+import { DOM_OPERATION_QUEUE_TYPES, DOM_TEXT_TYPE } from "../constant/type"
 
 export default class ReactDOMComponent {
   currentElement: ReactDOMElement
@@ -34,17 +34,23 @@ export default class ReactDOMComponent {
     children = isArray( children ) ? children : [ children ]
 
     // Create and save node
-    const node = <ModifiedNode>document.createElement( type )
+    const node = type !== DOM_TEXT_TYPE ? <ModifiedNode>document.createElement( type ) : document.createTextNode( props.$value )
     this.node = node
 
     // Set attribtues to node
-    for ( let key in props ) {
-      if ( key !== CHILDREN ) {
-        node.setAttribute( key, props[ key ] )
+    if ( type !== DOM_TEXT_TYPE ) {
+      for ( let key in props ) {
+        if ( key !== CHILDREN ) {
+          node.setAttribute( key, props[ key ] )
+        }
       }
     }
+    
 
-    const renderedChildren = children.map( instantiateComponent )
+    const renderedChildren = children.map( child => {
+      child =  ! isString( child ) ? child : { type: DOM_TEXT_TYPE, props: { $value: child } }
+      return instantiateComponent( child )
+    } )
     this.renderedChildren = renderedChildren
 
     const childNodes = renderedChildren.map( child => child.mount() )
