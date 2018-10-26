@@ -1,0 +1,5 @@
+export const DOM_OPERATION_QUEUE_TYPES = {
+  ADD: 'ADD',
+  REPLACE: 'REPLACE',
+  REMOVE: 'REMOVE',
+}

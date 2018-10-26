@@ -16,6 +16,7 @@ import isBoolean from "lodash/isBoolean"
 import isString from "lodash/isString"
 import isDate from "lodash/isDate"
 import find from "lodash/find"
+// import isFunction from "lodash/isFunction"
 
 export {
   isNil,
@@ -23,6 +24,7 @@ export {
   isUndefined,
   isArray,
   isObject,
+  // isFunction,
 
 	cloneDeep,
 	includes,

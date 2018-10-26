@@ -1,5 +1,5 @@
-import { UserDefinedClassComponent } from "./UserDefinedComponent";
+import { ReactUserDefinedClassComponent } from "./ReactUserDefinedClassComponent";
 
 export default class React {
-    static Component = UserDefinedClassComponent
+    static Component = ReactUserDefinedClassComponent
 }
