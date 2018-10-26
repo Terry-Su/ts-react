@@ -21,21 +21,20 @@ export function mountTree( element: ReactElement, containerNode: HTMLElement ) {
     const { type: prevType } = prevElement
     if ( type === prevType ) {
       ( <any>prevRootComponent ).receive( element )
+      return
     }
     if ( type !== prevType ) {
       unmountTree( containerNode )
     }
   }
 
-  if ( isNil( firstChild ) ) {
-    const rootComponent = instantiateComponent( element )
+  const rootComponent = instantiateComponent( element )
 
-    const node = rootComponent.mount()
-    containerNode.appendChild( node )
+  const node = rootComponent.mount()
+  containerNode.appendChild( node )
 
-    // Set internal instance to node
-    node[ _INTERNAL_INSTANCE ] = rootComponent
-  }
+  // Set internal instance to node
+  node[ _INTERNAL_INSTANCE ] = rootComponent
 }
 
 export function unmountTree( containerNode: HTMLElement ) {
