@@ -1,9 +1,9 @@
-import { ReactUserDefinedClassComponent } from "./ReactUserDefinedClassComponent";
-import ReactDomComponent from "../renderer/ReactDomComponent";
-import { isClass, isFunctionNotClass } from "../util/js";
-import { ReactUserDefinedElement, ReactElement, ReactUserDefinedClassComponentClassType, ReactUserDefinedFuncComponent, ReactDomElement } from "../__typings__/Core";
-import { instantiateComponent } from "../util/core";
-import { ModifiedNode } from "../__typings__";
+import ReactUserDefinedClassComponent from "./ReactUserDefinedClassComponent"
+import ReactDOMComponent from "../renderer/ReactDOMComponent"
+import { isClass, isFunctionNotClass } from "../util/js"
+import { ReactUserDefinedElement, ReactElement, ReactUserDefinedClassComponentClassType, ReactUserDefinedFuncComponent, ReactDOMElement } from "../__typings__/Core"
+import { instantiateComponent } from "../util/core/index"
+import { ModifiedNode } from "../__typings__/index"
 
 export default class ReactCompositeComponent {
   // The instance of the use-defined class component
@@ -12,7 +12,7 @@ export default class ReactCompositeComponent {
   currentElement: ReactUserDefinedElement
 
   // Child component
-  renderedComponent: ReactCompositeComponent | ReactDomComponent
+  renderedComponent: ReactCompositeComponent | ReactDOMComponent
 
   constructor( element: ReactUserDefinedElement ) {
     this.currentElement = element  
@@ -33,7 +33,7 @@ export default class ReactCompositeComponent {
     let renderedElement: ReactElement
 
     if ( isClass( type ) ) {
-      publicInstance = new (<ReactUserDefinedClassComponentClassType>type)( props )
+      publicInstance = new ( <ReactUserDefinedClassComponentClassType>type )( props )
       renderedElement = publicInstance.render()
     }
 
@@ -84,7 +84,7 @@ export default class ReactCompositeComponent {
     const nextType = type
 
     if ( prevType === nextType ) {
-      (<any>prevRenderedComponent).receive( nextRenderedElement )
+      ( <any>prevRenderedComponent ).receive( nextRenderedElement )
       return
     }
 

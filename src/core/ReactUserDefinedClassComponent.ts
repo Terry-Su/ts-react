@@ -6,13 +6,13 @@
 
 
 
-import { CHILDREN } from "../constant/name";
-import { ReactUserDefinedComponentProps, ReactElement } from "../__typings__/Core";
+import { CHILDREN } from "../constant/name"
+import { ReactUserDefinedComponentProps, ReactElement } from "../__typings__/Core"
 
 
 
 
-export class ReactUserDefinedClassComponent {
+export default class ReactUserDefinedClassComponent {
   props: ReactUserDefinedComponentProps = {}
 
   constructor( props = {} ) {

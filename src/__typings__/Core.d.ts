@@ -1,4 +1,4 @@
-import { ReactUserDefinedClassComponent } from "../core/ReactUserDefinedClassComponent";
+import ReactUserDefinedClassComponent from "../core/ReactUserDefinedClassComponent"
 
 type ReactUserDefinedComponentProps = any 
 
@@ -8,8 +8,13 @@ type ReactUserDefinedClassComponentClassType = { new( props: ReactUserDefinedCom
 
 type HostComponent = HTMLElement
 
+
+type ReactElementType = ReactUserDefinedClassComponentClassType | ReactUserDefinedFuncComponent | string
+
+type ReactElementChildren = string | ReactElement | string[] | ReactElement[] 
+
 interface ReactElement {
-  type: ReactUserDefinedClassComponent | ReactUserDefinedFuncComponent | string,
+  type: ReactElementType,
   props: ReactUserDefinedComponentProps
 }
 
@@ -17,7 +22,7 @@ interface ReactUserDefinedElement {
   type: ReactUserDefinedFuncComponent | ReactUserDefinedClassComponentClassType,
   props: ReactUserDefinedComponentProps
 }
-interface ReactDomElement {
+interface ReactDOMElement {
   type: string,
   props: ReactUserDefinedComponentProps
 }

@@ -1,21 +1,19 @@
-import { ReactDomElement } from "../__typings__/Core"
-import isArray = require( "lodash/isArray" )
+import { ReactDOMElement } from "../__typings__/Core"
 import { CHILDREN } from "../constant/name"
-import { instantiateComponent } from "../util/core"
-import { ModifiedNode } from "../__typings__"
-import isNil = require( "lodash/isNil" )
-import { notNil } from "../util/lodash"
+import { instantiateComponent } from "../util/core/index"
+import { ModifiedNode } from "../__typings__/index"
+import { notNil, isArray, isNil } from "../util/lodash"
 import { DOM_OPERATION_QUEUE_TYPES } from "../constant/type"
 
-export default class ReactDomComponent {
-  currentElement: ReactDomElement
+export default class ReactDOMComponent {
+  currentElement: ReactDOMElement
 
   // children components
   renderedChildren = []
 
   node: ModifiedNode
 
-  constructor( element: ReactDomElement ) {
+  constructor( element: ReactDOMElement ) {
     this.currentElement = element
   }
 
@@ -46,10 +44,10 @@ export default class ReactDomComponent {
       }
     }
 
-    const renderedChildren = children.forEach( instantiateComponent )
+    const renderedChildren = children.map( instantiateComponent )
     this.renderedChildren = renderedChildren
 
-    const childNodes = renderedChildren.forEach( child => child.mount() )
+    const childNodes = renderedChildren.map( child => child.mount() )
     childNodes.forEach( childNode => node.appendChild( childNode ) )
 
     return node
@@ -60,7 +58,7 @@ export default class ReactDomComponent {
     renderedChildren.forEach( child => child.unmount() )
   }
 
-  receive( nextElement: ReactDomElement ) {
+  receive( nextElement: ReactDOMElement ) {
     const { node, currentElement: prevElement } = this
     const { props: prevProps } = prevElement
     const { props: nextProps } = nextElement

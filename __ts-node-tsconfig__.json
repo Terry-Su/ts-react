@@ -3,10 +3,10 @@
 		"src/**/*"
 	],
 	"exclude": [
-		"node_modules",
+		"node_modules"
 	],
 	"compilerOptions": {
-		"module": "es6",
+		"module": "commonjs",
 		"target": "es5",
 		"allowJs": true,
 		"outDir": "./build/",
@@ -16,12 +16,12 @@
 			"es2016"
 		],
 		"types": [
-			"jasmine",
+			"jasmine"
 		],
 		"typeRoots": [
 			"node_modules/@types/**/*",
 			"src/__typings__/**/*"
 		],
-		"allowSyntheticDefaultImports": true,
+		"allowSyntheticDefaultImports": true
 	}
 }

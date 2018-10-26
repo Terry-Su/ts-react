@@ -1,7 +1,12 @@
 
-const a = 1
-console.log( a )
-// ReactDOM.render(<h1>Hello World!</h1>, document.getElementById("app"));
+const { createElement: h } = React
+class App extends React.Component {
+  render() {
+    return h( 'div', { class: 'test1' }, h( 'div', { class: 'test2' } ) )
+  }
+}
+
+ReactDOM.render( h( App ), document.getElementById( "app" ) )
 
 
 // class App extends React.Component {

@@ -1,10 +1,10 @@
-import ReactCompositeComponent from "../../core/ReactCompositeComponent";
-import ReactDomComponent from "../../renderer/ReactDomComponent";
-import isString = require("lodash/isString");
-import { isClass, isFunctionNotClass } from "../js";
-import { ReactElement, ReactUserDefinedElement, ReactDomElement } from "../../__typings__/Core";
+import ReactCompositeComponent from "../../core/ReactCompositeComponent"
+import ReactDOMComponent from "../../renderer/ReactDOMComponent"
+import { isClass, isFunctionNotClass } from "../js"
+import { ReactElement, ReactUserDefinedElement, ReactDOMElement } from "../../__typings__/Core"
+import { isString } from "../lodash"
 
-export function instantiateComponent( element: ReactElement ) : ReactCompositeComponent | ReactDomComponent {
+export function instantiateComponent( element: ReactElement ) : ReactCompositeComponent | ReactDOMComponent {
   const { type } = element
 
   // For a user-defiend component(a class or a function)
@@ -14,6 +14,6 @@ export function instantiateComponent( element: ReactElement ) : ReactCompositeCo
 
   // For a DOM component
   if ( isString( type ) ) {
-    return new ReactDomComponent( <ReactDomElement>element )
+    return new ReactDOMComponent( <ReactDOMElement>element )
   }
 }

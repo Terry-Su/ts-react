@@ -1,11 +1,11 @@
-import { instantiateComponent } from "../util/core"
+import { instantiateComponent } from "../util/core/index"
 import { ReactElement } from "../__typings__/Core"
 import { _INTERNAL_INSTANCE } from "../constant/name"
-import { ModifiedNode } from "../__typings__"
+import { ModifiedNode } from "../__typings__/index"
 import { notNil, isNil } from "../util/lodash"
 
-export default class ReactDom {
-  render( element: ReactElement, containerNode: HTMLElement ) {
+export default class ReactDOM {
+  static render( element: ReactElement, containerNode: HTMLElement ) {
     return mountTree( element, containerNode )
   }
 }
