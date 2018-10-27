@@ -12,6 +12,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.setState( { count: 1 } )
+    setTimeout( this.setState( { count: 2 } ), 0 )
   }
 
   render() {

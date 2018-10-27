@@ -28,4 +28,5 @@ interface ReactDOMElement {
 }
 
 
+type ReactState = any
 

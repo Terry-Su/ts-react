@@ -4,6 +4,8 @@ import { instantiateComponent } from "../util/core/index"
 import { ModifiedNode } from "../__typings__/index"
 import { notNil, isArray, isNil, isString } from "../util/lodash"
 import { DOM_OPERATION_QUEUE_TYPES, DOM_TEXT_TYPE } from "../constant/type"
+import { getReactTextElement } from "../util/renderer/index"
+import { isDOMElementNode, isDOMTextNode } from "../util/dom"
 
 export default class ReactDOMComponent {
   currentElement: ReactDOMElement
@@ -34,7 +36,7 @@ export default class ReactDOMComponent {
     children = isArray( children ) ? children : [ children ]
 
     // Create and save node
-    const node = type !== DOM_TEXT_TYPE ? <ModifiedNode>document.createElement( type ) : document.createTextNode( props.$value )
+    const node = type !== DOM_TEXT_TYPE ? <ModifiedNode>document.createElement( type ) : <any>document.createTextNode( props.data )
     this.node = node
 
     // Set attribtues to node
@@ -47,10 +49,7 @@ export default class ReactDOMComponent {
     }
     
 
-    const renderedChildren = children.map( child => {
-      child =  ! isString( child ) ? child : { type: DOM_TEXT_TYPE, props: { $value: child } }
-      return instantiateComponent( child )
-    } )
+    const renderedChildren = children.map( instantiateComponent )
     this.renderedChildren = renderedChildren
 
     const childNodes = renderedChildren.map( child => child.mount() )
@@ -74,7 +73,7 @@ export default class ReactDOMComponent {
     // Remove old attributes
     for ( let key in prevProps ) {
       if ( key !== CHILDREN && !( <Object>prevProps ).hasOwnProperty( key ) ) {
-        node.removeAttribute( key )
+        isDOMElementNode( node ) && node.removeAttribute( key )
       }
     }
 
@@ -82,7 +81,8 @@ export default class ReactDOMComponent {
     for ( let key in nextProps ) {
       if ( key !== CHILDREN ) {
         const value = nextProps[ key ]
-        node.setAttribute( key, value )
+        isDOMElementNode( node ) && node.setAttribute( key, value )
+        isDOMTextNode( node ) && ( ( <any>node ).data = value )
       }
     }
 
@@ -133,7 +133,9 @@ export default class ReactDOMComponent {
         }
 
         if ( canUpdate ) {
-          prevChild.receive( nextChildren[ i ] )
+          let nextChildrenElement = nextChildren[ i ]
+          nextChildrenElement = isString( nextChildrenElement ) ? getReactTextElement( nextChildrenElement ) : nextChildrenElement
+          prevChild.receive( nextChildrenElement )
           nextRenderedChildren.push( prevChild )
         }
       }

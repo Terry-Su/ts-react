@@ -34,6 +34,7 @@ export default class ReactCompositeComponent {
 
     if ( isClass( type ) ) {
       publicInstance = new ( <ReactUserDefinedClassComponentClassType>type )( props )
+      publicInstance._reactCompositeComponent = this
       renderedElement = publicInstance.render()
     }
 
@@ -48,7 +49,13 @@ export default class ReactCompositeComponent {
     const renderedComponent = instantiateComponent( renderedElement )
     this.renderedComponent = renderedComponent
 
-    return renderedComponent.mount()
+    const node = renderedComponent.mount()
+    
+    if ( isClass( type ) && ! publicInstance.isMounted ) {
+      publicInstance.isMounted = true
+      publicInstance.componentDidMount()
+    }
+    return node
   }
 
   unmount() {
@@ -80,15 +87,15 @@ export default class ReactCompositeComponent {
     }
 
     
-    const { type: prevType } = prevRenderedElement
-    const nextType = type
+    const { type: prevRenderedType } = prevRenderedElement
+    const { type: nextRenderedType } = nextRenderedElement
 
-    if ( prevType === nextType ) {
+    if ( prevRenderedType === nextRenderedType ) {
       ( <any>prevRenderedComponent ).receive( nextRenderedElement )
       return
     }
 
-    if ( prevType !== nextType ) {
+    if ( prevRenderedType !== nextRenderedType ) {
       const prevNode = prevRenderedComponent.getHostNode()
 
       prevRenderedComponent.unmount()
@@ -100,5 +107,11 @@ export default class ReactCompositeComponent {
       prevNode.parentNode.replaceChild( nextNode, prevNode )
     }
 
+  }
+
+  refresh() {
+    // this.receive( <any>( <any>( this.renderedComponent ).currentElement ) )
+    // console.log( this.currentElement )
+    this.receive( this.currentElement )
   }
 }
