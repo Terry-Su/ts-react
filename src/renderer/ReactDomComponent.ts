@@ -120,7 +120,7 @@ export default class ReactDOMComponent {
           prevChild.unmount()
 
           const nextChild = instantiateComponent( nextChildren[ i ] )
-          const nextNode = nextChild.getHostNode()
+          const nextNode = nextChild.mount()
 
           nextRenderedChildren.push( nextChild )
 
