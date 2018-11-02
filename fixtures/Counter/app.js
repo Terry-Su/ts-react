@@ -20,7 +20,6 @@ class App extends Component {
   }
 
   render() {
-    // return <h1>Count: { this.state.count }</h1>
     return h(
       Container,
       null,
