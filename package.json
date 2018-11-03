@@ -22,11 +22,13 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.9",
+    "@types/jsdom": "^12.2.0",
     "@types/node": "^10.12.0",
     "browser-sync": "^2.26.3",
     "clean-webpack-plugin": "^0.1.19",
     "eslint": "^5.7.0",
     "jasmine": "^3.2.0",
+    "jsdom": "^13.0.0",
     "lodash": "^4.17.11",
     "ts-loader": "^5.2.2",
     "ts-node": "^7.0.1",

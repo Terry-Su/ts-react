@@ -20,7 +20,7 @@
 		],
 		"typeRoots": [
 			"node_modules/@types/**/*",
-			"src/__typings__/**/*"
+			// "src/__typings__/**/*"
 		],
 		"allowSyntheticDefaultImports": true,
 	}

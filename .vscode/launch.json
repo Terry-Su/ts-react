@@ -6,25 +6,26 @@
   "configurations": [
    
     // Src
-    // {
-    //   "type": "node",
-    //   "request": "launch",
-    //   "name": "Jasmine",
-    //   "program": "${workspaceFolder}/node_modules/jasmine/bin/jasmine",
-    //   "runtimeArgs": [
-    //     "-r", 
-    //     "./__ts-node__.js"
-    //     // "ts-node/register",
-    //   ],
-    // },
-    // Fixtures
     {
-      "type": "chrome",
+      "type": "node",
       "request": "launch",
-      "name": "Launch Chrome",
-      "url": "http://localhost:6060/fixtures/Counter/index.html",
-      "webRoot": "${workspaceFolder}"
-    }
+      "name": "Jasmine",
+      "program": "${workspaceFolder}/node_modules/jasmine/bin/jasmine",
+      "runtimeArgs": [
+        "-r", 
+        "./__ts-node__.js"
+        // "ts-node/register",
+      ],
+    },
+
+    // // Fixtures
+    // {
+    //   "type": "chrome",
+    //   "request": "launch",
+    //   "name": "Launch Chrome",
+    //   "url": "http://localhost:6060/fixtures/Counter/index.html",
+    //   "webRoot": "${workspaceFolder}"
+    // }
     
   ]
 }
