@@ -1,4 +1,6 @@
 import { ExpirationTime } from "./__typings__/index.spec"
+import Fiber from "./ReactFiber"
+import { isNil, notNil } from "./util/js"
 // UpdateQueue is a linked list of prioritized updates.
 //
 // Like fibers, update queues come in pairs: a current queue, which represents
@@ -109,3 +111,135 @@ export interface UpdateQueue<State> {
   lastCapturedEffect: Update<State>
 }
 
+
+
+
+export function createUpdate( expirationTime: ExpirationTime ): Update<any> {
+  return {
+    expirationTime,
+    tag     : UpdateState,
+    payload : null,
+    callback: null,
+
+    next      : null,
+    nextEffect: null
+  }
+}
+
+export function createUpdateQueue<State>( baseState: State ): UpdateQueue<State> {
+  const queue: UpdateQueue<State> = {
+    baseState,
+    firstUpdate        : null,
+    lastUpdate         : null,
+    firstCapturedUpdate: null,
+    lastCapturedUpdate : null,
+    firstEffect        : null,
+    lastEffect         : null,
+    firstCapturedEffect: null,
+    lastCapturedEffect : null,
+  }
+  return queue
+}
+
+
+function cloneUpdateQueue<State>( currentQueue: UpdateQueue<State> ): UpdateQueue<State> {
+  const {
+    baseState,
+    firstUpdate,
+    lastUpdate
+  } = currentQueue
+  const queue: UpdateQueue<State> = {
+    baseState,
+    firstUpdate,
+    lastUpdate,
+
+    firstCapturedUpdate: null,
+    lastCapturedUpdate : null,
+
+    firstEffect: null,
+    lastEffect : null,
+
+    firstCapturedEffect: null,
+    lastCapturedEffect : null,
+  }
+  return queue
+}
+
+function appendUpdateToQueue<State>( queue: UpdateQueue<State>, update: Update<State> ) {
+  // Append the udpate to the end of the list
+  if ( isNil( queue.lastUpdate ) ) {
+    // Queue is empty
+    queue.lastUpdate = update
+    queue.firstUpdate = queue.lastUpdate
+  }
+  if ( notNil( queue.lastUpdate ) ) {
+    queue.lastUpdate.next = update
+    queue.lastUpdate = update
+  }
+}
+
+
+
+export function enqueueUpdate<State>( fiber: Fiber, update: Update<State> ) {
+  // Update queues are created lazily.
+  const alternate = fiber.alternate
+  let queue1
+  let queue2
+  if ( isNil( alternate ) ) {
+    // There's only one fiber.
+    queue1 = fiber.updateQueue
+    queue2 = null
+    if ( isNil( queue1 ) ) {
+      fiber.updateQueue = createUpdateQueue( fiber.memoizedState )
+      queue1 = fiber.updateQueue
+    }
+  } else {
+    // There are two owners.
+    queue1 = fiber.updateQueue
+    queue2 = alternate.updateQueue
+    if ( isNil( queue1 ) ) {
+      if ( isNil( queue2 ) ) {
+        // Neither fiber has an update queue. Create new ones.
+        fiber.updateQueue = createUpdateQueue( fiber.memoizedState )
+        queue1 = fiber.updateQueue
+
+        alternate.updateQueue = createUpdateQueue(
+          alternate.memoizedState,
+        )
+        queue2 = alternate.updateQueue
+      } else {
+        // Only one fiber has an update queue. Clone to create a new one.
+        fiber.updateQueue = cloneUpdateQueue( queue2 )
+        queue1 = fiber.updateQueue
+      }
+    } else {
+      if ( isNil( queue2 ) ) {
+        // Only one fiber has an update queue. Clone to create a new one.
+        alternate.updateQueue = cloneUpdateQueue( queue1 )
+        queue2 = alternate.updateQueue
+      } else {
+        // Both owners have an update queue.
+      }
+    }
+  }
+  if ( isNil( queue2 ) || queue1 === queue2 ) {
+    // There's only a single queue.
+    appendUpdateToQueue( queue1, update )
+  } else {
+    // There are two queues. We need to append the update to both queues,
+    // while accounting for the persistent structure of the list — we don't
+    // want the same update to be added multiple times.
+    if ( queue1.lastUpdate === null || queue2.lastUpdate === null ) {
+      // One of the queues is not empty. We must add the update to both queues.
+      appendUpdateToQueue( queue1, update )
+      appendUpdateToQueue( queue2, update )
+    } else {
+      // Both queues are non-empty. The last update is the same in both lists,
+      // because of structural sharing. So, only append to one of the lists.
+      appendUpdateToQueue( queue1, update )
+      // But we still need to update the `lastUpdate` pointer of queue2.
+      queue2.lastUpdate = update
+    }
+  }
+
+}

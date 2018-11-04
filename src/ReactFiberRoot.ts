@@ -52,7 +52,7 @@ interface BaseFiberRootProperties {
   // Also contains completion callbacks
   firstBatch: Batch
   // Linked-list of roots
-  nextScheduleRoot: FiberRoot
+  nextScheduledRoot: FiberRoot
 
   // If an error is thrown, and there are no more updates in the queue,
   // we try rendering from the root one more time, synchronously, before
