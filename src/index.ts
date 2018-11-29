@@ -1,6 +1,5 @@
-import React from "./core/React"
-import ReactDOM from "./renderer/ReactDOM"
-import { REACT, REACT_DOM } from "./constant/name"
+import React from "./react/React"
+import ReactDOM from "./react-dom/ReactDOM"
 
-window[ REACT ] = React
-window[ REACT_DOM ] = ReactDOM
+window[ 'React' ] = React
+window[ 'ReactDOM' ] = ReactDOM

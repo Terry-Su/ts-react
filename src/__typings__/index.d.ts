@@ -1,7 +1,8 @@
-import { _INTERNAL_INSTANCE } from "../constant/name"
-import ReactCompositeComponent from "../core/ReactCompositeComponent"
-import ReactDOMComponent from "../renderer/ReactDOMComponent"
+import FiberRoot from "../react-reconciler/ReactFiberRoot"
+import { ReactRoot } from "../react-dom/ReactDOM"
 
-interface ModifiedNode extends HTMLElement {
-  [ _INTERNAL_INSTANCE ] ?: ReactCompositeComponent | ReactDOMComponent
+export type Type = string | Function
+
+export interface REACT_HTML_ELEMENT extends HTMLElement {
+  _reactRootContainer?: ReactRoot
 }
