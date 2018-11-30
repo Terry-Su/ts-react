@@ -12,7 +12,7 @@
 // import mapValues from "lodash/mapValues"
 // import values from "lodash/values"
 // import isPlainObject from "lodash/isPlainObject"
-// import isNumber from "lodash/isNumber"
+import isNumber from "lodash/isNumber"
 // import isBoolean from "lodash/isBoolean"
 // import isString from "lodash/isString"
 // import isDate from "lodash/isDate"
@@ -26,5 +26,10 @@ export const isArray = Array.isArray
 
 
 export const isString = ( value ) => typeof value === 'string'  
+export const isFunction = ( value ) => typeof value === 'function'  
 
+
+export {
+  isNumber
+}
 

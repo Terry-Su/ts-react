@@ -3,19 +3,27 @@ import FiberRoot, { createFiberRoot } from "./ReactFiberRoot"
 import Fiber, { createWorkInProgress } from "./ReactFiber"
 import { beginWork } from "./ReactFiberBeginWork"
 import { createUpdate, enqueueUpdate } from "./ReactUpdateQueue"
+import { scheduleWork } from "./ReactFiberScheduler"
 
 export function createContainer( container: REACT_HTML_ELEMENT ) {
   return createFiberRoot( container )
 }
 
-export function updateContainer( element: any, root: FiberRoot ) {
-  const { current } = root
 
+export function scheduleRootUpdate( current: Fiber, element: any ) {
   const update = createUpdate()
   update.payload = { element }
 
   enqueueUpdate( current, update )
 
-  const nextUnitOfWork: Fiber = createWorkInProgress( current, null )
-  beginWork( current, nextUnitOfWork )
+  scheduleWork( current )
+}
+
+export function updateContainerAtExpirationTime( element: any, root: FiberRoot ) {
+  const { current } = root
+  return scheduleRootUpdate( current, element )
+}
+
+export function updateContainer( element: any, root: FiberRoot ) {
+  updateContainerAtExpirationTime( element, root )
 }

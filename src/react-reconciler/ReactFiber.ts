@@ -1,13 +1,17 @@
 import { Type } from "../__typings__/index"
 import { Component } from "../react/React"
-import { HostRoot, WorkTag } from "../shared/ReactWorkTags"
-import { isNil } from "../util/lodash"
+import { HostRoot, WorkTag, IndeterminateComponent, ClassComponent, HostComponent } from "../shared/ReactWorkTags"
+import { isNil, isFunction, isString } from "../util/lodash"
 import FiberRoot from "./ReactFiberRoot"
 import UpdateQueue from "./ReactUpdateQueue"
+import { ReactElement } from "../react/ReactElement"
+import { SideEffectTag } from "../shared/ReactSideEffectTags"
 
+export type FiberStateNode = HTMLElement | Component | FiberRoot 
 export default class Fiber {
   tag: WorkTag
   type: Type
+  elementType: Type
   key: any
   
   child: Fiber
@@ -23,7 +27,9 @@ export default class Fiber {
   // flushing or work-in-progress
   alternate: Fiber
 
-  stateNode: HTMLElement | Component | FiberRoot 
+  stateNode: FiberStateNode
+
+  effectTag: SideEffectTag
 
   constructor( tag: WorkTag, pendingProps: any, key: any ) {
     this.tag = tag
@@ -55,7 +61,42 @@ export function createWorkInProgress( current: Fiber, pendingProps: any ) {
   workInProgress.child = current.child
   workInProgress.sibling = current.sibling
   workInProgress.memoizedProps = current.child
+  workInProgress.updateQueue = current.updateQueue
+
 
   return workInProgress
   
+}
+
+
+export function shouldConstruct( Component ) {
+  const { prototype } = Component
+  return !!( prototype && prototype.isReactComponent )
+}
+
+export function createFiberFromTypeAndProps( type: Type, key: any, pendingProps: any ) {
+  let fiberTag:WorkTag = IndeterminateComponent
+
+  // The resolved type is set if we know what the final type will be. I.e. it's not lazy.
+  let resolvedType = type
+
+  if ( isFunction( type ) ) {
+    if ( shouldConstruct( type ) ) {
+      fiberTag = ClassComponent
+    }
+  } else if ( isString( type ) ) {
+    fiberTag = HostComponent
+  } else {}
+
+  const fiber = createFiber( fiberTag, pendingProps, key )
+  fiber.elementType = type
+  fiber.type = resolvedType
+  return fiber
+}
+
+
+export function createFiberFromElement( element: ReactElement ) {
+  const { type, key, props: pendingProps  } = element
+  const fiber = createFiberFromTypeAndProps( type, key, pendingProps )
+  return fiber
 }

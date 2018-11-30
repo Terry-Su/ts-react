@@ -76,7 +76,7 @@
 // resources, but the final state is always the same.
 
 import Fiber from "./ReactFiber"
-import { isNil } from "../util/lodash"
+import { isNil, notNil, isFunction } from "../util/lodash"
 
 export const UpdateState = 0
 export const ReplaceState = 1
@@ -118,7 +118,7 @@ export function createUpdateQueue( baseState ): UpdateQueue {
   return new UpdateQueue( baseState )
 }
 
-function cloneUpdateQueue( currentQueue: UpdateQueue ) {
+export function cloneUpdateQueue( currentQueue: UpdateQueue ) {
   const {
     baseState,
 
@@ -163,7 +163,7 @@ export function enqueueUpdate( fiber: Fiber, update: Update ) {
     queue1 = fiber.updateQueue
     queue2 = null
     if ( isNil( queue1 ) ) {
-      fiber.updateQueue = createUpdateQueue( fiber.memoizedState )
+      queue1 = fiber.updateQueue = createUpdateQueue( fiber.memoizedState )
     }
   } else {
     // there're two fiber: fiber and alternate
@@ -213,7 +213,68 @@ export function enqueueUpdate( fiber: Fiber, update: Update ) {
   }
 }
 
+export function ensureWorkInProgressQueueIsAClone( workInProgress: Fiber, queue: UpdateQueue ) {
+  const { alternate: current } = workInProgress
+  if ( notNil( current ) ) {
+    if ( queue === current.updateQueue ) {
+      queue = workInProgress.updateQueue = cloneUpdateQueue( queue )
+    }
+  }
+  return queue
+}
+
+export function getStateFromUpdate( workInProgress: Fiber, queue: UpdateQueue, update: Update, prevState: any, nextProps: any, instance: any ) {
+  switch( update.tag ) {
+    case UpdateState: {
+      let partialState
+      const { payload } = update
+      
+      if ( isFunction( payload ) ) {
+        // updater is function
+        partialState = payload.call( instance, prevState, nextProps )
+      } else {
+        // updater is object
+        partialState = payload
+      }
+      
+      if ( isNil( partialState ) ) {
+        return prevState
+      }
+
+      return {
+        ...prevState,
+        ...partialState
+      }
+    }
+  }
+}
 
 export function processUpdateQueue( workInProgress: Fiber, queue: UpdateQueue, props: any, instance: any ) {
+  queue = ensureWorkInProgressQueueIsAClone( workInProgress, queue )
 
+  let { baseState: newBaseState } = queue
+  let newFirstUpdate
+
+  // Iterate through the list of updates to compute the result
+  let { firstUpdate: update } = queue
+  let resultState = newBaseState
+  while ( notNil( update ) ) {
+    resultState = getStateFromUpdate( workInProgress, queue, update, resultState, props, instance ) 
+    
+    // continue to the next update
+    update = update.next
+  }
+
+  if ( isNil( newFirstUpdate ) ) {
+    queue.lastUpdate = null
+  }
+
+  if ( isNil( newFirstUpdate ) ) {
+    newBaseState = resultState
+  }
+
+  queue.baseState = newBaseState
+  queue.firstUpdate = newFirstUpdate
+
+  workInProgress.memoizedState = resultState
 }
