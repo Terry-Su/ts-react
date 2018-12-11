@@ -26,4 +26,4 @@ export function updateContainerAtExpirationTime( element: any, root: FiberRoot )
 
 export function updateContainer( element: any, root: FiberRoot ) {
   updateContainerAtExpirationTime( element, root )
-}
+} 

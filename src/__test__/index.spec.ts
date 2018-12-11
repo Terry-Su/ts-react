@@ -11,7 +11,7 @@ describe( 'Test', () => {
   it( 'test', () => {
     const { document } = getWindow()
     const container = document.createElement( 'div' )
-    ReactDOM.render( h( 'div', {
+    ReactDOM.render( h( 'h1', {
       style: "background: blue;"
     } ), container )
   } )

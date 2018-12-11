@@ -8,6 +8,7 @@ import { ReactElement } from "../react/ReactElement"
 import { SideEffectTag } from "../shared/ReactSideEffectTags"
 
 export type FiberStateNode = HTMLElement | Component | FiberRoot 
+
 export default class Fiber {
   tag: WorkTag
   type: Type
@@ -27,6 +28,7 @@ export default class Fiber {
   // flushing or work-in-progress
   alternate: Fiber
 
+  // (still confusing)The local state associated with this fiber
   stateNode: FiberStateNode
 
   effectTag: SideEffectTag

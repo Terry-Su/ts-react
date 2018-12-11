@@ -2,6 +2,7 @@ import Fiber, { FiberStateNode, createWorkInProgress } from "./ReactFiber"
 import { Sync, ExpirationTime } from "./ReactFiberExpirationTime"
 import FiberRoot from "./ReactFiberRoot"
 import { beginWork } from "./ReactFiberBeginWork"
+import { isNil, notNil } from "../util/lodash"
 
 let nextUnitOfWork: Fiber
 let nextRoot: FiberRoot
@@ -9,7 +10,7 @@ let nextRoot: FiberRoot
 let nextFlushedRoot: FiberRoot
 
 let firstScheduledRoot: FiberRoot
-let lastScheduleRoot: FiberRoot
+let lastScheduledRoot: FiberRoot
 
 export function scheduleWorkToRoot( fiber: Fiber ) {
   const root = fiber.stateNode
@@ -40,8 +41,22 @@ export function performWorkOnRoot( root: FiberRoot ) {
 
 export function findHighestPriorityRoot() {
   let highestPriorityRoot
-  // To be continue
+  
+  if ( notNil( lastScheduledRoot ) ) {
+    let root = firstScheduledRoot
+
+    highestPriorityRoot = lastScheduledRoot
+  }
+
   nextFlushedRoot = highestPriorityRoot
+}
+
+export function addRootToSchedule( root: FiberRoot ) {
+  if (  isNil( root.nextScheduledRoot ) ) {
+    if ( isNil( lastScheduledRoot ) ) {
+      firstScheduledRoot = lastScheduledRoot = root
+    }
+  }
 }
 
 export function performWork() {
@@ -54,6 +69,7 @@ export function performSyncWork() {
 }
 
 export function requestWork( root: FiberStateNode ) {
+  addRootToSchedule( <FiberRoot>root )
   performSyncWork()
 }
 

@@ -4,6 +4,9 @@ import { REACT_HTML_ELEMENT } from "../__typings__/index"
 class FiberRoot {
   current: Fiber
   container: REACT_HTML_ELEMENT
+
+  nextScheduledRoot: FiberRoot
+
   constructor( container: REACT_HTML_ELEMENT ) {
     const uninitializedFiber: Fiber = createHostRootFiber()
     this.container = container

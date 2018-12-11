@@ -44,6 +44,7 @@ export function updateHostRoot( current: Fiber, workInProgress: Fiber ) {
   } = workInProgress
   const { element: nextChildren } = nextState
   reconcileChildren( current, workInProgress, nextChildren )
+  return workInProgress.child
 }
 
 
