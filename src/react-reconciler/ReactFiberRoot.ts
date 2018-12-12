@@ -7,6 +7,8 @@ class FiberRoot {
 
   nextScheduledRoot: FiberRoot
 
+  finishedWork: Fiber
+
   constructor( container: REACT_HTML_ELEMENT ) {
     const uninitializedFiber: Fiber = createHostRootFiber()
     this.container = container

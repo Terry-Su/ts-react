@@ -10,8 +10,14 @@ function getWindow() {
 describe( 'Test', () => {
   it( 'test', () => {
     const { document } = getWindow()
+    global[ 'document' ] = document
     const container = document.createElement( 'div' )
-    ReactDOM.render( h( 'h1', {
+
+    function App() {
+      return h( 'h1' )
+    }
+
+    ReactDOM.render( h( App, {
       style: "background: blue;"
     } ), container )
   } )

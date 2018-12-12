@@ -1,7 +1,6 @@
 import { REACT_HTML_ELEMENT } from "../__typings__/index"
 import FiberRoot, { createFiberRoot } from "./ReactFiberRoot"
 import Fiber, { createWorkInProgress } from "./ReactFiber"
-import { beginWork } from "./ReactFiberBeginWork"
 import { createUpdate, enqueueUpdate } from "./ReactUpdateQueue"
 import { scheduleWork } from "./ReactFiberScheduler"
 

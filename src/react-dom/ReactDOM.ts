@@ -2,6 +2,7 @@ import { REACT_HTML_ELEMENT } from "../__typings__/index"
 import { isNil } from "../util/lodash"
 import FiberRoot from "../react-reconciler/ReactFiberRoot"
 import { createContainer, updateContainer } from "../react-reconciler/ReactFiberReconciler"
+import { setHostContainer } from "../tmp/hostContainer"
 
 
 export class ReactRoot {
@@ -22,6 +23,10 @@ export class ReactRoot {
 
 const ReactDOM = {
   render( element: any, container: REACT_HTML_ELEMENT ) {
+
+    // tmp
+    setHostContainer( container )
+
     if ( isNil( container._reactRootContainer ) ) {
       container._reactRootContainer = new ReactRoot( container )
     }
