@@ -33,6 +33,16 @@ export default class Fiber {
 
   effectTag: SideEffectTag
 
+
+  // Singly linked list fast path to the next fiber with side-effects.
+  nextEffect: Fiber
+
+  // The first and last fiber with side-effect within this subtree. This allows
+  // us to reuse a slice of the linked list when we reuse the work done within
+  // this fiber.
+  firstEffect: Fiber
+  lastEffect: Fiber
+
   constructor( tag: WorkTag, pendingProps: any, key: any ) {
     this.tag = tag
     this.pendingProps = pendingProps

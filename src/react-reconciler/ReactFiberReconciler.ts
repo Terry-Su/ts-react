@@ -4,8 +4,8 @@ import Fiber, { createWorkInProgress } from "./ReactFiber"
 import { createUpdate, enqueueUpdate } from "./ReactUpdateQueue"
 import { scheduleWork } from "./ReactFiberScheduler"
 
-export function createContainer( container: REACT_HTML_ELEMENT ) {
-  return createFiberRoot( container )
+export function createContainer( containerInfo: REACT_HTML_ELEMENT ) {
+  return createFiberRoot( containerInfo )
 }
 
 

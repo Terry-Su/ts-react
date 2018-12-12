@@ -7,8 +7,8 @@ import { setHostContainer } from "../tmp/hostContainer"
 
 export class ReactRoot {
   _internalRoot: FiberRoot
-  constructor( container: REACT_HTML_ELEMENT ) {
-    this._internalRoot = createContainer( container )
+  constructor( containerInfo: REACT_HTML_ELEMENT ) {
+    this._internalRoot = createContainer( containerInfo )
   }
 
   render( element: any ) {
@@ -22,16 +22,16 @@ export class ReactRoot {
 
 
 const ReactDOM = {
-  render( element: any, container: REACT_HTML_ELEMENT ) {
+  render( element: any, containerInfo: REACT_HTML_ELEMENT ) {
 
     // tmp
-    setHostContainer( container )
+    setHostContainer( containerInfo )
 
-    if ( isNil( container._reactRootContainer ) ) {
-      container._reactRootContainer = new ReactRoot( container )
+    if ( isNil( containerInfo._reactRootContainer ) ) {
+      containerInfo._reactRootContainer = new ReactRoot( containerInfo )
     }
 
-    container._reactRootContainer.render( element )
+    containerInfo._reactRootContainer.render( element )
   }
 }
 

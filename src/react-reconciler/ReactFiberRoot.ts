@@ -3,15 +3,15 @@ import { REACT_HTML_ELEMENT } from "../__typings__/index"
 
 class FiberRoot {
   current: Fiber
-  container: REACT_HTML_ELEMENT
+  containerInfo: REACT_HTML_ELEMENT
 
   nextScheduledRoot: FiberRoot
 
   finishedWork: Fiber
 
-  constructor( container: REACT_HTML_ELEMENT ) {
+  constructor( containerInfo: REACT_HTML_ELEMENT ) {
     const uninitializedFiber: Fiber = createHostRootFiber()
-    this.container = container
+    this.containerInfo = containerInfo
     this.current = uninitializedFiber
     
     uninitializedFiber.stateNode = this
@@ -19,8 +19,8 @@ class FiberRoot {
 }
 
 
-export function createFiberRoot( container: REACT_HTML_ELEMENT ) {
-  return new FiberRoot( container )
+export function createFiberRoot( containerInfo: REACT_HTML_ELEMENT ) {
+  return new FiberRoot( containerInfo )
 }
 
 export default FiberRoot

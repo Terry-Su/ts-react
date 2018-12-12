@@ -88,6 +88,7 @@ export class Update {
   payload: any
 
   next: Update
+  nextEffect: Update
 }
 
 export default class UpdateQueue {
@@ -263,6 +264,13 @@ export function processUpdateQueue( workInProgress: Fiber, queue: UpdateQueue, p
     
     // continue to the next update
     update = update.next
+
+    // if ( queue.lastEffect === null ) {
+    //   queue.firstEffect = queue.lastEffect = update
+    // } else {
+    //   queue.lastEffect.nextEffect = update
+    //   queue.lastEffect = update
+    // }
   }
 
   if ( isNil( newFirstUpdate ) ) {
