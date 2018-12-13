@@ -1,6 +1,6 @@
 import Fiber from "./ReactFiber"
 import { HostComponent, HostText, HostRoot, HostPortal } from "../shared/ReactWorkTags"
-import { notNil, isNil } from "../util/lodash"
+import { notNil } from "../util/lodash"
 import { appendChildToContainer } from "../react-dom/ReactDOMHostConfig"
 import FiberRoot from "./ReactFiberRoot"
 
@@ -68,8 +68,8 @@ export function commitPlacement( finishedWork: Fiber ) {
       return
     }
 
-    while ( isNil( node.sibling ) ) {
-      if ( isNil( node.return ) || node.return === finishedWork ) {
+    while ( node.sibling === null ) {
+      if ( node.return === null || node.return === finishedWork ) {
         return
       }
       node = node.return

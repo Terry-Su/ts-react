@@ -11,8 +11,6 @@ import { processUpdateQueue } from "./ReactUpdateQueue"
 import { reconcileChildFibers, mountChildFibers } from "./ReactChildFiber"
 import { Placement, ContentReset } from "../shared/ReactSideEffectTags"
 import { shouldSetTextContent } from "../react-dom/ReactDOMHostConfig"
-import { Component } from "../react/React"
-import { constructClassInstance, mountClassInstance } from "./ReactFiberClassComponent"
 
 export function reconcileChildren(
   current: Fiber,
@@ -77,7 +75,7 @@ export function updateHostComponent( current: Fiber, workInProgress: Fiber ) {
     // this in the host environment that also have access to this prop. That
     // avoids allocating another HostText fiber and traversing it.
     nextChildren = null
-  } else if ( notNil( prevProps ) && shouldSetTextContent( type, prevProps ) ) {
+  } else if ( notNil( prevProps ) && shouldSetTextContent( type, prevProps ) ){
     // If we're switching from a direct text child to a normal child, or to
     // empty, we need to schedule the text content to be reset.
     workInProgress.effectTag |= ContentReset
@@ -96,52 +94,6 @@ export function updateHostRoot( current: Fiber, workInProgress: Fiber ) {
   return workInProgress.child
 }
 
-export function resolveDefaultProps( Component, baseProps ) {
-  if ( Component && Component.defaultProps ) {
-    // Resolve default props. Taken from ReactElement
-    const props = { ...baseProps }
-    const { defaultProps } = Component
-    for ( let propName in defaultProps ) {
-      if ( props[ propName ] === undefined ) {
-        props[ propName ] = defaultProps[ propName ]
-      }
-    }
-    return props
-  }
-  return baseProps
-}
-
-
-
-export function finishClassComponent(
-  current: Fiber,
-  workInProgress: Fiber,
-  Component: any,
-  shouldUpdate: boolean
-) {
-  const instance = <Component>workInProgress.stateNode
-  let nextChildren = instance.render()
-  reconcileChildren( current, workInProgress, nextChildren )
-  return workInProgress.child
-}
-
-export function updateClassComponent(
-  current: Fiber,
-  workInProgress: Fiber,
-  Component: any,
-  nextProps: any
-) {
-  const instance = workInProgress.stateNode
-  let shouldUpdate
-
-  if ( isNil( instance ) ) {
-    constructClassInstance( workInProgress, Component, nextProps )
-    mountClassInstance( workInProgress, Component, nextProps )
-    shouldUpdate = true
-  }
-  return finishClassComponent( current, workInProgress, Component, shouldUpdate )
-}
-
 export function beginWork( current: Fiber, workInProgress: Fiber ): Fiber {
   switch ( workInProgress.tag ) {
     case HostRoot:
@@ -149,20 +101,6 @@ export function beginWork( current: Fiber, workInProgress: Fiber ): Fiber {
     case IndeterminateComponent:
       const { elementType } = workInProgress
       return mountIndeterminateComponent( current, workInProgress, elementType )
-    case ClassComponent: {
-      const { type: Component } = workInProgress
-      const unresolvedProps = workInProgress.pendingProps
-      const resolvedProps =
-        workInProgress.elementType === Component ?
-          unresolvedProps :
-          resolveDefaultProps( Component, unresolvedProps )
-      return updateClassComponent(
-        current,
-        workInProgress,
-        Component,
-        resolvedProps
-      )
-    }
     case HostComponent:
       return updateHostComponent( current, workInProgress )
   }

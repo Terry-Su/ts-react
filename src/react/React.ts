@@ -1,5 +1,13 @@
-export class Component {
+export abstract class Component {
+  props: any
+
   isReactComponent: any
+
+  constructor( props: any ) {
+    this.props = props
+  }
+
+  abstract render(): any
 }
 
 Component.prototype.isReactComponent = {}

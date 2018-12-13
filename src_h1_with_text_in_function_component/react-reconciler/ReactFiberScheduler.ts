@@ -143,7 +143,6 @@ export function commitAllHostEffects() {
       }
 
     }
-    nextEffect = nextEffect.nextEffect
   }
 }
 
