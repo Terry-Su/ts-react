@@ -1,6 +1,6 @@
 import Fiber from "./ReactFiber"
 import { HostComponent } from "../shared/ReactWorkTags"
-import { createInstance, finalizeInitialChildren } from "../react-dom/ReactDOMHostConfig"
+import { createInstance } from "../react-dom/ReactDOMHostConfig"
 import { getHostContainer } from "../tmp/hostContainer"
 import { REACT_HTML_ELEMENT } from "../__typings__/index"
 
@@ -23,11 +23,6 @@ export function completeWork( current: Fiber, workInProgress: Fiber ) {
       )
 
       appendAllChildren( instance, workInProgress )
-
-      // !! Set inner text from here
-      if ( finalizeInitialChildren( instance,  <string>type, newProps, rootContainerInstance ) ) {
-        // ...
-      }
 
       workInProgress.stateNode = instance
     }

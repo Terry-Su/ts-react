@@ -9,8 +9,7 @@ import {
 } from "../shared/ReactWorkTags"
 import { processUpdateQueue } from "./ReactUpdateQueue"
 import { reconcileChildFibers, mountChildFibers } from "./ReactChildFiber"
-import { Placement, ContentReset } from "../shared/ReactSideEffectTags"
-import { shouldSetTextContent } from "../react-dom/ReactDOMHostConfig"
+import { Placement } from "../shared/ReactSideEffectTags"
 
 export function reconcileChildren(
   current: Fiber,
@@ -64,23 +63,7 @@ export function mountIndeterminateComponent(
 
 export function updateHostComponent( current: Fiber, workInProgress: Fiber ) {
   const { type, pendingProps: nextProps } = workInProgress
-  let { children: nextChildren } = nextProps
-
-  const isDirectTextChild = shouldSetTextContent( type, nextProps )
-  const prevProps = notNil( current ) ? current.memoizedProps : null
-
-  if ( isDirectTextChild ) {
-    // We special case a direct text child of a host node. This is a common
-    // case. We won't handle it as a reified child. We will instead handle
-    // this in the host environment that also have access to this prop. That
-    // avoids allocating another HostText fiber and traversing it.
-    nextChildren = null
-  } else if ( notNil( prevProps ) && shouldSetTextContent( type, prevProps ) ){
-    // If we're switching from a direct text child to a normal child, or to
-    // empty, we need to schedule the text content to be reset.
-    workInProgress.effectTag |= ContentReset
-  }
-
+  const { children: nextChildren } = nextProps
   reconcileChildren( current, workInProgress, nextChildren )
   return workInProgress.child
 }

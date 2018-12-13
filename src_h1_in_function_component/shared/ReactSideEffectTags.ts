@@ -9,7 +9,6 @@ export const PerformedWork = 1
 export const Placement = 2
 export const Update = 4
 export const Deletion = 8
-export const ContentReset = 16
 
 export const Incomplete = 512
 

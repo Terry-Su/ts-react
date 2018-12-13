@@ -14,9 +14,7 @@ describe( 'Test', () => {
     const container = document.createElement( 'div' )
 
     function App() {
-      return h( 'h1', {
-        children: 'Title Text'
-      } )
+      return h( 'h1' )
     }
 
     ReactDOM.render( h( App, {
