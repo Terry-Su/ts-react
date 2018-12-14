@@ -52,8 +52,3 @@ export function finalizeInitialChildren( domElement: REACT_HTML_ELEMENT, type: s
   setInitialProperties( domElement, type, props, rootContainerInstance )
   return shouldAutoFocusHostComponent( type, props )
 }
-
-
-export function commitTextUpdate( textInstance, oldText, newText ) {
-  textInstance.nodeValue = newText
-}

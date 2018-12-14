@@ -15,19 +15,9 @@ describe( 'Test', () => {
     const container = document.createElement( 'div' )
 
     class App extends React.Component {
-      state = {
-        count: 1
-      }
-
-      componentDidMount() {
-        this.setState( {
-          count: 2
-        } )
-      }
-
       render() {
         return h( 'h1', {
-          children: `Count: ${ this.state.count }`
+          children: 'Title Text'
         } )
       }
     }

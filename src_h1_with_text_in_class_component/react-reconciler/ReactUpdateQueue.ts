@@ -77,7 +77,6 @@
 
 import Fiber from "./ReactFiber"
 import { isNil, notNil, isFunction } from "../util/lodash"
-import { Component } from "../react/React"
 
 export const UpdateState = 0
 export const ReplaceState = 1
@@ -90,8 +89,6 @@ export class Update {
 
   next: Update
   nextEffect: Update
-
-  callback?: Function
 }
 
 export default class UpdateQueue {
@@ -288,10 +285,4 @@ export function processUpdateQueue( workInProgress: Fiber, queue: UpdateQueue, p
   queue.firstUpdate = newFirstUpdate
 
   workInProgress.memoizedState = resultState
-}
-
-
-
-export function commitUpdateQueue( finishedWork: Fiber, finishedQueue: UpdateQueue, instance: Component ) {
-
 }

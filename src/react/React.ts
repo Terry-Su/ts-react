@@ -1,13 +1,30 @@
+import ReactNoopUpdateQueue from "./ReactNoopUpdateQueue"
+
 export abstract class Component {
-  props: any
+  props
 
-  isReactComponent: any
+  updater
 
-  constructor( props: any ) {
+  isReactComponent
+
+  state
+
+  constructor( props: any, updater ) {
     this.props = props
+    this.updater = updater || ReactNoopUpdateQueue
   }
 
-  abstract render(): any
+  setState = ( partialState: any, callback?: Function ) => {
+    this.updater.enqueueSetState( this, partialState, callback, 'setState' )
+  }
+
+  abstract render()
+
+  componentDidMount () {
+    
+  }
+
+  
 }
 
 Component.prototype.isReactComponent = {}

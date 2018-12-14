@@ -9,10 +9,10 @@ import {
 } from "../shared/ReactWorkTags"
 import { processUpdateQueue } from "./ReactUpdateQueue"
 import { reconcileChildFibers, mountChildFibers } from "./ReactChildFiber"
-import { Placement, ContentReset, PerformedWork } from "../shared/ReactSideEffectTags"
+import { Placement, ContentReset } from "../shared/ReactSideEffectTags"
 import { shouldSetTextContent } from "../react-dom/ReactDOMHostConfig"
 import { Component } from "../react/React"
-import { constructClassInstance, mountClassInstance, updateClassInstance } from "./ReactFiberClassComponent"
+import { constructClassInstance, mountClassInstance } from "./ReactFiberClassComponent"
 
 export function reconcileChildren(
   current: Fiber,
@@ -122,10 +122,6 @@ export function finishClassComponent(
   const instance = <Component>workInProgress.stateNode
   let nextChildren = instance.render()
   reconcileChildren( current, workInProgress, nextChildren )
-
-  // React DevTools reads this flag.
-  workInProgress.effectTag |= PerformedWork
-  
   return workInProgress.child
 }
 
@@ -142,10 +138,6 @@ export function updateClassComponent(
     constructClassInstance( workInProgress, Component, nextProps )
     mountClassInstance( workInProgress, Component, nextProps )
     shouldUpdate = true
-  } else if ( isNil( current ) ) {
-
-  } else {
-    shouldUpdate = updateClassInstance( current, workInProgress, Component, nextProps )
   }
   return finishClassComponent( current, workInProgress, Component, shouldUpdate )
 }

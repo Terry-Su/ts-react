@@ -1,28 +1,15 @@
 import Fiber from "./ReactFiber"
-import {
-  HostComponent,
-  HostText,
-  HostRoot,
-  HostPortal,
-  ClassComponent
-} from "../shared/ReactWorkTags"
+import { HostComponent, HostText, HostRoot, HostPortal } from "../shared/ReactWorkTags"
 import { notNil, isNil } from "../util/lodash"
 import { appendChildToContainer } from "../react-dom/ReactDOMHostConfig"
 import FiberRoot from "./ReactFiberRoot"
-import { Update } from "../shared/ReactSideEffectTags"
-import { Component } from "../react/React"
-import { commitUpdateQueue } from "./ReactUpdateQueue"
 
 export function getHostSibling( finishedWork: Fiber ) {
   return null
 }
 
 function isHostParent( fiber ) {
-  return (
-    fiber.tag === HostComponent ||
-    fiber.tag === HostRoot ||
-    fiber.tag === HostPortal
-  )
+  return fiber.tag === HostComponent || fiber.tag === HostRoot || fiber.tag === HostPortal
 }
 
 export function getHostParentFiber( fiber: Fiber ) {
@@ -35,35 +22,42 @@ export function getHostParentFiber( fiber: Fiber ) {
   }
 }
 
+
+
+
 export function commitPlacement( finishedWork: Fiber ) {
   // Recursively insert all host nodes into the parent.
   var parentFiber = getHostParentFiber( finishedWork )
 
+
   let parent
   let isContainer
 
-  switch ( parentFiber.tag ) {
+  switch( parentFiber.tag ) {
     case HostComponent:
       parent = parentFiber.stateNode
       isContainer = false
-    case HostRoot:
+      case HostRoot:
       parent = ( <FiberRoot>parentFiber.stateNode ).containerInfo
       isContainer = true
       break
-  }
+  } 
 
   let node = finishedWork
   const before = getHostSibling( finishedWork )
   while ( true ) {
     if ( node.tag === HostComponent || node.tag === HostText ) {
       if ( before ) {
+
       } else {
         if ( isContainer ) {
           appendChildToContainer( parent, node.stateNode )
         } else {
         }
       }
+
     } else if ( node.tag === HostPortal ) {
+
     } else if ( notNil( node.child ) ) {
       node.child.return = node
       node = node.child
@@ -82,30 +76,5 @@ export function commitPlacement( finishedWork: Fiber ) {
     }
     node.sibling.return = node.return
     node = node.sibling
-  }
-}
-
-export function commitLifeCycles(
-  finishedRoot: FiberRoot,
-  current: Fiber,
-  finishedWork: Fiber
-) {
-  switch ( finishedWork.tag ) {
-    case ClassComponent: {
-      const instance = <Component>finishedWork.stateNode
-      if ( finishedWork.effectTag & Update ) {
-        if ( isNil( current ) ) {
-          instance.props = finishedWork.memoizedProps
-          instance.state = finishedWork.memoizedState
-          instance.componentDidMount()
-        }
-      }
-      const { updateQueue } = finishedWork
-      if ( notNil( updateQueue ) ) {
-        instance.props = finishedWork.memoizedProps
-        instance.state = finishedWork.memoizedState
-        commitUpdateQueue( finishedWork, updateQueue, instance )
-      }
-    }
   }
 }
