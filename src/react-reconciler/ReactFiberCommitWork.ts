@@ -27,7 +27,7 @@ function isHostParent( fiber ) {
 
 export function getHostParentFiber( fiber: Fiber ) {
   var parent = fiber.return
-  while ( parent !== null ) {
+  while ( notNil( parent ) ) {
     if ( isHostParent( parent ) ) {
       return parent
     }

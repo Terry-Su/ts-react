@@ -8,7 +8,7 @@ import {
   HostComponent
 } from "../shared/ReactWorkTags"
 import { processUpdateQueue } from "./ReactUpdateQueue"
-import { reconcileChildFibers, mountChildFibers } from "./ReactChildFiber"
+import { reconcileChildFibers, mountChildFibers, cloneChildFibers } from "./ReactChildFiber"
 import { Placement, ContentReset, PerformedWork } from "../shared/ReactSideEffectTags"
 import { shouldSetTextContent } from "../react-dom/ReactDOMHostConfig"
 import { Component } from "../react/React"
@@ -150,7 +150,24 @@ export function updateClassComponent(
   return finishClassComponent( current, workInProgress, Component, shouldUpdate )
 }
 
+export function bailoutOnAlreadyFinishedWork( current: Fiber, workInProgress: Fiber ) {
+  cloneChildFibers( current, workInProgress )
+  return workInProgress.child
+}
+
 export function beginWork( current: Fiber, workInProgress: Fiber ): Fiber {
+  // if ( notNil( current ) ) {
+  //   const oldProps = current.memoizedProps
+  //   const newProps = workInProgress.pendingProps
+
+  //   if (  oldProps === newProps  ){
+  //     switch ( workInProgress.tag ) {
+
+  //     }
+  //     return bailoutOnAlreadyFinishedWork( current, workInProgress )
+  //   }
+  // }
+
   switch ( workInProgress.tag ) {
     case HostRoot:
       return updateHostRoot( current, workInProgress )

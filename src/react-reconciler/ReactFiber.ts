@@ -14,7 +14,7 @@ import UpdateQueue from "./ReactUpdateQueue"
 import { ReactElement } from "../react/ReactElement"
 import { SideEffectTag } from "../shared/ReactSideEffectTags"
 
-export type FiberStateNode = HTMLElement | Component | FiberRoot
+export type FiberStateNode = HTMLElement | Component | FiberRoot | Text
 
 export default class Fiber {
   tag: WorkTag

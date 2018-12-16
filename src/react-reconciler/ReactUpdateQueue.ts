@@ -203,7 +203,7 @@ export function enqueueUpdate( fiber: Fiber, update: Update ) {
     // There are two queues. We need to append the update to both queues,
     // while accounting for the persistent structure of the list — we don't
     // want the same update to be added multiple times.
-    if ( queue1.lastUpdate === null || queue2.lastUpdate === null ) {
+    if ( isNil( queue1.lastUpdate ) || isNil( queue2.lastUpdate ) ) {
       // One of the queues is not empty. We must add the update to both queues.
       appendUpdateToQueue( queue1, update )
       appendUpdateToQueue( queue2, update )

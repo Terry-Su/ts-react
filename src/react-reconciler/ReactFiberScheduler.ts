@@ -187,7 +187,7 @@ export function commitWork( current: Fiber, finishedWork: Fiber ) {
       // For hydration we reuse the update path but we treat the oldProps
       // as the newProps. The updatePayload will contain the real change in
       // this case.
-      const oldText = current !== null ? current.memoizedProps : newText
+      const oldText = notNil( current ) ? current.memoizedProps : newText
       commitTextUpdate( textInstance, oldText, newText )
       return
     }

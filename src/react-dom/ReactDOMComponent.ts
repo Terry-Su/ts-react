@@ -39,3 +39,8 @@ export function setInitialProperties( domElement: REACT_HTML_ELEMENT, tag: strin
 
   setInitialDOMProperties( tag, domElement, rootContainerElement, props )
 }
+
+
+export function createTextNode( text: string, rootContainerElement: REACT_HTML_ELEMENT ) {
+  return document.createTextNode( text )
+}

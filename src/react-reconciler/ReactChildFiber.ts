@@ -1,7 +1,7 @@
 import Fiber, { createFiberFromElement, createFiberFromText, createWorkInProgress } from "./ReactFiber"
 import { REACT_ELEMENT_TYPE, REACT_FRAGMENT_TYPE } from "../shared/ReactSymbols"
 import { ReactElement } from "../react/ReactElement"
-import { isNil, isString, isNumber, isArray } from "../util/lodash"
+import { isNil, isString, isNumber, isArray, notNil } from "../util/lodash"
 import { Placement, Deletion } from "../shared/ReactSideEffectTags"
 import { HostText } from "../shared/ReactWorkTags"
 
@@ -42,7 +42,7 @@ function ChildReconciler( shouldTrackSideEffects: boolean ) {
     // effects aren't added until the complete phase. Once we implement
     // resuming, this may not be true.
     var last = returnFiber.lastEffect
-    if ( last !== null ) {
+    if ( notNil( last ) ) {
       last.nextEffect = childToDelete
       returnFiber.lastEffect = childToDelete
     } else {
@@ -60,7 +60,7 @@ function ChildReconciler( shouldTrackSideEffects: boolean ) {
     // TODO: For the shouldClone case, this could be micro-optimized a bit by
     // assuming that after the first child we've already added everything.
     var childToDelete = currentFirstChild
-    while ( childToDelete !== null ) {
+    while ( notNil( childToDelete ) ) {
       deleteChild( returnFiber, childToDelete )
       childToDelete = childToDelete.sibling
     }
@@ -79,7 +79,7 @@ function ChildReconciler( shouldTrackSideEffects: boolean ) {
   function reconcileSingleTextNode( returnFiber: Fiber, currentFirstChild: Fiber, textContent: string ) {
     // There's no need to check for keys on text nodes since we don't have a
     // way to define them.
-    if ( currentFirstChild !== null && currentFirstChild.tag === HostText ) {
+    if ( notNil( currentFirstChild ) && currentFirstChild.tag === HostText ) {
       // We already have an existing node so let's just update it and delete
       // the rest.
       deleteRemainingChildren( returnFiber, currentFirstChild.sibling )
@@ -94,6 +94,19 @@ function ChildReconciler( shouldTrackSideEffects: boolean ) {
     created.return = returnFiber
     return created
   }
+
+
+  function createChild( returnFiber: Fiber, newChild: Fiber ) {
+    if ( typeof newChild === 'string' || typeof newChild === 'number' ) {
+      // Text nodes don't have keys. If the previous node is implicitly keyed
+      // we can continue to replace it without aborting even if it is not a text
+      // node.
+      var created = createFiberFromText( '' + newChild )
+      created.return = returnFiber
+      return created
+    }
+  }
+
 
   function reconcileChildrenArray( returnFiber: Fiber, currentFirstChild: Fiber, newChildren: any  ) {
     // This algorithm can't optimize by searching from boths ends since we
@@ -115,7 +128,30 @@ function ChildReconciler( shouldTrackSideEffects: boolean ) {
     // If you change this code, also update reconcileChildrenIterator() which
     // uses the same algorithm.
 
+    const oldFiber = currentFirstChild
+    let newIdx = 0
+    let previousNewFiber: Fiber
+    let resultingFirstChild: Fiber
 
+    if ( isNil( oldFiber ) ) {
+      for ( ; newIdx < newChildren.length; newIdx++ ) {
+        const newFiber = createChild(
+          returnFiber,
+          newChildren[ newIdx ],
+        )
+        if ( ! newFiber ) {
+          continue
+        }
+
+        if ( isNil( previousNewFiber ) ) {
+          resultingFirstChild = newFiber
+        } else {
+          previousNewFiber.sibling = newFiber
+        }
+        previousNewFiber = newFiber
+      }
+      return resultingFirstChild
+    }
   }
 
 
@@ -130,8 +166,8 @@ function ChildReconciler( shouldTrackSideEffects: boolean ) {
   // not as a fragment. Nested arrays on the other hand will be treated as
   // fragment nodes. Recursion happens at the normal flow.
   function reconcileChildFibers( returnFiber: Fiber, currentFirstChild: Fiber, newChild: any ) {
-    const isObject = typeof newChild === 'object' && newChild !== null
-    const isUnkeyedTopLevelFragment = typeof newChild === 'object' && newChild !== null && newChild.type === REACT_FRAGMENT_TYPE && newChild.key === null
+    const isObject = typeof newChild === 'object' && notNil( newChild )
+    const isUnkeyedTopLevelFragment = typeof newChild === 'object' && notNil( newChild ) && newChild.type === REACT_FRAGMENT_TYPE && isNil( newChild.key )
 
 
     
@@ -165,3 +201,22 @@ function ChildReconciler( shouldTrackSideEffects: boolean ) {
 
 export const reconcileChildFibers: Function = ChildReconciler( true )
 export const mountChildFibers: Function = ChildReconciler( false )
+
+
+export function cloneChildFibers( current: Fiber, workInProgress: Fiber ) {
+  if ( isNil( workInProgress.child ) ) {
+    return
+  }
+
+  var currentChild = workInProgress.child
+  var newChild = createWorkInProgress( currentChild, currentChild.pendingProps )
+  workInProgress.child = newChild
+
+  newChild.return = workInProgress
+  while ( notNil( currentChild.sibling ) ) {
+    currentChild = currentChild.sibling
+    newChild = newChild.sibling = createWorkInProgress( currentChild, currentChild.pendingProps )
+    newChild.return = workInProgress
+  }
+  newChild.sibling = null
+}

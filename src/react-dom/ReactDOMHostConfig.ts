@@ -1,5 +1,5 @@
 import { Type, REACT_HTML_ELEMENT } from "../__typings__/index"
-import { createElement, setInitialProperties } from "./ReactDOMComponent"
+import { createElement, setInitialProperties, createTextNode } from "./ReactDOMComponent"
 import { precacheFiberNode, updateFiberProps } from "./ReactDOMComponentTree"
 import { COMMENT_NODE } from "../shared/HTMLNodeType"
 
@@ -56,4 +56,14 @@ export function finalizeInitialChildren( domElement: REACT_HTML_ELEMENT, type: s
 
 export function commitTextUpdate( textInstance, oldText, newText ) {
   textInstance.nodeValue = newText
+}
+
+
+export function createTextInstance( text: string, rootContainerInstance: REACT_HTML_ELEMENT, internalInstanceHandle: any ) {
+  var textNode = createTextNode( text, rootContainerInstance )
+  return textNode
+}
+
+export function appendInitialChild( parentInstance: REACT_HTML_ELEMENT, child: REACT_HTML_ELEMENT ) {
+  parentInstance.appendChild( child )
 }

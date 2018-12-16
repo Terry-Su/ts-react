@@ -27,7 +27,7 @@ describe( 'Test', () => {
 
       render() {
         return h( 'h1', {
-          children: `Count: ${ this.state.count }`
+          children: [ `Count:`, this.state.count ]
         } )
       }
     }
