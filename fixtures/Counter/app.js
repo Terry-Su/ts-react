@@ -26,7 +26,7 @@ class App extends Component {
       null,
       [
         h( "h1", null, [ h( "div", { class: "test" } ), `Count: ${this.state.count}` ] ),
-        this.state.showingBox ? h( Box ) : h( 'span' )
+        // this.state.showingBox ? h( Box ) : h( 'span' )
       ]
     )
   }

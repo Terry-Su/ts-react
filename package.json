@@ -17,7 +17,7 @@
   "scripts": {
     "start": "npm run server | webpack -w",
     "test": "ts-node --project __ts-node-tsconfig__.json --files true node_modules/jasmine/bin/jasmine",
-    "server": "browser-sync start --server --port 6060 --watch fixtures --directory --startPath /fixtures/Counter/index.html --no-open",
+    "server": "browser-sync start --server --port 6060 --watch fixtures --directory --startPath /fixtures/Counter/index.html",
     "lint": "eslint src/**/*.*"
   },
   "devDependencies": {
